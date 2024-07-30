@@ -54,6 +54,7 @@ jobs:
 
   import:
     runs-on: ubuntu-latest
+    needs: export
 
     steps:
     - name: Check out repository
