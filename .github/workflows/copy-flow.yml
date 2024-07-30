@@ -21,7 +21,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GH_TOKEN }}
 
     - name: Export the flow service definition
       run: |
@@ -60,7 +60,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GH_TOKEN }}
 
     - name: Update the flow service definition in all projects where it is used
       run: |
