@@ -83,7 +83,7 @@ jobs:
             # Check if the flow service is in the list of flows using Bash
             if echo "$FLOW_SERVICES" | grep -q -w "${{ github.event.inputs.flowService }}"; then
                 # We don't update the flow service in the source project
-                if [ "$project" != "${{ github.event.inputs.sourceProjectId }}" ]; then
+                if [ "$PROJECT_UID" != "${{ github.event.inputs.sourceProjectId }}" ]; then
                     curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" \
                       --request POST "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/flow-import" \
                       --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip" >/dev/null \
