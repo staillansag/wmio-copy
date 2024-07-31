@@ -38,8 +38,7 @@ jobs:
         mkdir -p flow-services
         curl -s "$DOWNLOAD_LINK" -o flow-services/${{ github.event.inputs.flowService }}.zip
 
-        MD5=$(md5 flow-services/${{ github.event.inputs.flowService }}.zip)
-        echo "ZIP md5 hash: " $MD5
+        md5sum flow-services/${{ github.event.inputs.flowService }}.zip
 
         if unzip -t "flow-services/${{ github.event.inputs.flowService }}.zip" >/dev/null 2>&1; then
           echo "Exported flow service zip is valid."
@@ -75,8 +74,7 @@ jobs:
             exit 1
         fi 
 
-        MD5=$(md5 $(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip)
-        echo "ZIP md5 hash: " $MD5
+        md5sum flow-services/${{ github.event.inputs.flowService }}.zip
 
         # Iterate over the list of projects to import the new flow service version
         for project in $PROJECTS; do
