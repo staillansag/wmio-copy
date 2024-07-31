@@ -76,14 +76,12 @@ jobs:
         for project in $PROJECTS; do
             ASSETS=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/assets")
 
-            echo "Source zip: " $(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip
-
             if echo "$ASSETS" | jq -e --arg flow_service "${{ github.event.inputs.flowService }}" '.flows[] | select(. == $flow_service)' > /dev/null; then
                 # We don't update the flow service in the source project
                 if [ "$project" != "${{ github.event.inputs.sourceProjectId }}" ]; then
                     curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" \
                       --request POST "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/flow-import" \
-                      --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip" >/dev/null \
+                      --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip" \
                         && echo "Project $project updated" || echo "Project $project NOT UPDATED"
                 fi
             fi
