@@ -70,7 +70,7 @@ jobs:
         if [ -z "$PROJECTS" ]; then
             echo "Failure to retrieve list of projects"
             exit 1
-        fi  
+        fi 
 
         # Iterate over the list of projects to import the new flow service version
         for project in $PROJECTS; do
