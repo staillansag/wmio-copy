@@ -65,7 +65,7 @@ jobs:
     - name: Update the flow service definition in all projects where it is used
       run: |
         # Get the list of projects
-        PROJECTS=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects" | jq -r .output.projects1 | jq -c '.[]')
+        PROJECTS=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects" | jq -r .output.projects | jq -c '.[]')
 
         if [ -z "$PROJECTS" ]; then
             echo "Failure to retrieve list of projects"
