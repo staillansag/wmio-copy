@@ -65,7 +65,7 @@ jobs:
     - name: Update the flow service definition in all projects where it is used
       run: |
         # Get the list of projects
-        PROJECTS=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects" | jq -r '.output.projects[].uid')
+        PROJECTS=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects" | jq -r .output.projects1 | jq -c '.[]')
 
         if [ -z "$PROJECTS" ]; then
             echo "Failure to retrieve list of projects"
@@ -74,7 +74,11 @@ jobs:
 
         # Iterate over the list of projects to import the new flow service version
         for project in $PROJECTS; do
-            FLOW_SERVICES=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/assets" | jq -r '.output.flows[]')
+
+            PROJECT_NAME=$(echo "$project" | jq -r '.name')
+            PROJECT_UID=$(echo "$project" | jq -r '.uid')
+
+            FLOW_SERVICES=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$PROJECT_UID/assets" | jq -r '.output.flows[]')
 
             # Check if the flow service is in the list of flows using Bash
             if echo "$FLOW_SERVICES" | grep -q -w "${{ github.event.inputs.flowService }}"; then
@@ -83,7 +87,7 @@ jobs:
                     curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" \
                       --request POST "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/flow-import" \
                       --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip" >/dev/null \
-                        && echo "Project $project updated" || echo "Project $project NOT UPDATED"
+                        && echo "Project $PROJECT_NAME updated" || echo "Project $PROJECT_NAME NOT UPDATED"
                 fi
             fi
         done
