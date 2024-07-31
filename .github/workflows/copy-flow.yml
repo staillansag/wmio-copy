@@ -87,12 +87,12 @@ jobs:
 
                     ERROR=$(echo $RESPONSE | jq -r '.error.message')
 
-                    if [ -z "$ERROR" ]; then
-                      echo "Project $PROJECT_NAME updated"
+                    if [ -n "$ERROR" ] && [ "$ERROR" != "null" ]; then
+                      echo "Project $PROJECT_NAME not updated: $RESPONSE"
                       exit 1
                     else
-                      echo "Project $PROJECT_NAME not updated: $ERROR"
-                    fi 
+                      echo "Project $PROJECT_NAME updated"
+                    fi
 
                 fi
             fi
