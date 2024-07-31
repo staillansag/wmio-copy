@@ -80,10 +80,20 @@ jobs:
             if echo "$FLOW_SERVICES" | grep -q -w "${{ github.event.inputs.flowService }}"; then
                 # We don't update the flow service in the source project
                 if [ "$PROJECT_UID" != "${{ github.event.inputs.sourceProjectId }}" ]; then
-                    curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" \
-                      --request POST "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/flow-import" \
-                      --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip" \
-                        && echo "Project $PROJECT_NAME updated" || echo "Project $PROJECT_NAME NOT UPDATED"
+
+                    RESPONSE=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" \
+                      --request POST "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$PROJECT_UID/flow-import" \
+                      --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip")
+
+                    ERROR=$(echo $RESPONSE | jq -r '.error.message')
+
+                    if [ -z "$ERROR" ]; then
+                      echo "Project $PROJECT_NAME updated"
+                      exit 1
+                    else
+                      echo "Project $PROJECT_NAME not updated: $ERROR"
+                    fi 
+
                 fi
             fi
         done
