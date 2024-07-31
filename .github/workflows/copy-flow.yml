@@ -74,7 +74,7 @@ jobs:
 
         # Iterate over the list of projects to import the new flow service version
         for project in $PROJECTS; do
-            FLOW_SERVICES=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/assets" | jq -r '.flows[]')
+            FLOW_SERVICES=$(curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/assets" | jq -r '.output.flows[]')
 
             # Check if the flow service is in the list of flows using Bash
             if echo "$FLOW_SERVICES" | grep -q -w "${{ github.event.inputs.flowService }}"; then
