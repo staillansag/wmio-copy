@@ -82,7 +82,7 @@ jobs:
                 if [ "$PROJECT_UID" != "${{ github.event.inputs.sourceProjectId }}" ]; then
                     curl -s -u "${{ secrets.WMIO_USERNAME }}:${{ secrets.WMIO_PASSWORD }}" \
                       --request POST "${{ secrets.WMIO_URL }}/apis/v1/rest/projects/$project/flow-import" \
-                      --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip" >/dev/null \
+                      --form "recipe=@$(pwd)/flow-services/${{ github.event.inputs.flowService }}.zip" \
                         && echo "Project $PROJECT_NAME updated" || echo "Project $PROJECT_NAME NOT UPDATED"
                 fi
             fi
